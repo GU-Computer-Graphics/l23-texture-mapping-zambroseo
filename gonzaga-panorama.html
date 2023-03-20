@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>Floral Image Display</title>
+  <style>
+    /* feel free to style the canvas any way you want. If you want it to
+      use the entire window, set width: 100% and height: 100%. */
+
+    canvas {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+      height: 500px;
+    }
+  </style>
+
+  <script src="./js/three.js"></script>
+  <script src="./js/tw.js"></script>
+  <script src="./js/OrbitControls.js"></script>
+  <script src="./js/SceneUtils.js"></script>
+  <!-- <script src="./js/dat.gui.js"></script> -->
+
+</head>
+
+<body>
+  <h1><em>Relaxing Floral Scene</em></h1>
+  <p>
+    <script>
+
+      // create a scene
+      var scene = new THREE.Scene();
+
+      // displayPanels() displays three panels with texture-mapped image of floral scene
+
+      function displayPanels(textures) {
+        // plane geometry with texture-mapped floral image
+        var planeGeom = new THREE.PlaneGeometry(10, 10);
+        var planeMat = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: textures[1]
+        });
+        var planeMesh = new THREE.Mesh(planeGeom, planeMat);
+        scene.add(planeMesh);
+
+        // repeat texture mapping on right panel
+        var planeR = planeGeom;
+        var planeMatR = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: textures[2]
+        });
+        var planeMeshR = new THREE.Mesh(planeR, planeMatR);
+        var dist = 5 * Math.cos(Math.PI / 4);
+        planeMeshR.position.set(5 + dist, 0, dist);
+        planeMeshR.rotation.y = -Math.PI / 4;
+        scene.add(planeMeshR);
+
+        // repeat texture mapping on left panel
+        var planeL = planeGeom;
+        var planeMatL = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          map: textures[0]
+        });
+        var planeMeshL = new THREE.Mesh(planeL, planeMatL);
+        planeMeshL.position.set(-5 - dist, 0, dist);
+        planeMeshL.rotation.y = Math.PI / 4;
+        scene.add(planeMeshL);
+
+        TW.render();    // render the scene
+      }
+
+      var renderer = new THREE.WebGLRenderer();
+
+      TW.mainInit(renderer, scene);
+
+      var state = TW.cameraSetup(renderer,
+        scene,
+        {
+          minx: -8, maxx: 8,
+          miny: -5, maxy: 5,
+          minz: 0, maxz: 8
+        });
+
+      // create a TextureLoader for loading the image file
+      var loader = new THREE.TextureLoader();
+
+      // load the relaxation.jpg image (stored in the same folder as this webpage),
+      // and when the image load is complete, invoke the anonymous function callback
+
+      TW.loadTextures(["./images/GU-ISE0.jpg","./images/GU-ISE1.jpg","./images/GU-ISE2.jpg"],
+        function (textures) {
+          displayPanels(textures);
+        });
+
+    </script>
+  </p>
+  <!-- <canvas width="1433" height="500" style="width: 1433px; height: 500px;"></canvas> -->
+
+</body>
+
+</html>
